@@ -27,13 +27,13 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(os.environ.get("DEBUG", default=0))
 
-ALLOWED_HOSTS = ["127.0.0.1", "localhost", "frontend-airbnb-nextjs-production.up.railway.app", "0.0.0.0"]
+ALLOWED_HOSTS = ["*"]
 
 AUTH_USER_MODEL = 'useraccount.User'
 
 SITE_ID = 1
 
-WEBSITE_URL = 'http://localhost:8000'
+WEBSITE_URL = 'https://backend-airbnb-production.up.railway.app'
 
 CHANNEL_LAYERS = {
     'default': {
@@ -98,6 +98,7 @@ CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1:8000',
     'http://127.0.0.1:3000',
     'http://64.226.81.32',
+    'https://frontend-airbnb-nextjs-production.up.railway.app',
     'http://64.226.81.32:1337'
 ]
 
@@ -110,7 +111,7 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 CORS_ORIGINS_WHITELIST = [
-     'https://frontend-airbnb-nextjs-production.up.railway.app',
+    'https://frontend-airbnb-nextjs-production.up.railway.app',
     'http://127.0.0.1:8000',
     'http://127.0.0.1:3000',
     'http://64.226.81.32',

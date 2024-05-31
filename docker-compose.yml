@@ -2,7 +2,7 @@ version: '3.8'
 services:
   web:
     build: .
-    command: python manage.py runserver 0.0.0.0:${PORT}
+    command: sh -c "echo Port is ${PORT} && python manage.py runserver 0.0.0.0:${PORT}"
     volumes:
       - ./:/usr/src/djangobnb_backend/
     env_file:
