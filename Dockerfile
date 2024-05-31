@@ -1,4 +1,5 @@
 FROM python:3.12.2-slim-bullseye
+# Upgrade pip and setuptools
 
 WORKDIR /usr/src/djangobnb_backend
 
