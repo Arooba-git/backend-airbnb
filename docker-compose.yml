@@ -2,11 +2,13 @@ version: '3.8'
 services:
   web:
     build: .
-    command: sh -c "echo Port is ${PORT} && python manage.py runserver 0.0.0.0:${PORT}"
+    command: sh -c 'echo "Port is ${PORT:-8000}" && python manage.py runserver 0.0.0.0:${PORT:-8000}'
     volumes:
       - ./:/usr/src/djangobnb_backend/
     env_file:
       - ./.env.dev
+    environment:
+      - PORT=${PORT}  # Pass the PORT environment variable
     depends_on:
       - db
   db:
