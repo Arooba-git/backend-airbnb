@@ -27,7 +27,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(os.environ.get("DEBUG", default=0))
 
-ALLOWED_HOSTS = ["127.0.0.1", ".vercel.app", ".now.sh"]
+ALLOWED_HOSTS = ["127.0.0.1", "localhost", "frontend-airbnb-nextjs-production.up.railway.app"]
 
 AUTH_USER_MODEL = 'useraccount.User'
 
@@ -104,11 +104,13 @@ CORS_ALLOWED_ORIGINS = [
 CSRF_TRUSTED_ORIGINS = [
     'http://127.0.0.1:8000',
     'http://127.0.0.1:3000',
+    'https://frontend-airbnb-nextjs-production.up.railway.app',
     'http://64.226.81.32',
     'http://64.226.81.32:1337'
 ]
 
 CORS_ORIGINS_WHITELIST = [
+     'https://frontend-airbnb-nextjs-production.up.railway.app',
     'http://127.0.0.1:8000',
     'http://127.0.0.1:3000',
     'http://64.226.81.32',
