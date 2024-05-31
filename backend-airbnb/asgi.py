@@ -8,7 +8,7 @@ from chat.routing import websocket_urlpatterns
 from chat.token_auth import TokenAuthMiddleware
 
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "djangobnb_backend.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "backend-airbnb.settings")
 application = get_asgi_application()
 
 application = ProtocolTypeRouter({
