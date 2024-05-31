@@ -13,11 +13,14 @@ services:
       - db
   db:
     image: postgres:15
-    volumes:
-      - postgres_data:/var/lib/postgresql/data/
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
       - POSTGRES_DB=djangobnb
-volumes:
-  postgres_data:
+    ports:
+      - "30589:5432"  # Adjust the port mapping as needed
+
+
+
+
+
