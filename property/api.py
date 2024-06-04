@@ -12,10 +12,10 @@ from .serializers import PropertiesListSerializer, PropertiesDetailSerializer, R
 @authentication_classes([])
 @permission_classes([])
 def properties_list(request):
-    favorites = []
+    print('inside properties_list')
     properties = Property.objects.all()
 
-    is_favorites = request.GET.get('is_favorites', '')
+    get_favorites = request.GET.get('favorites', '')
     landlord_id = request.GET.get('landlord_id', '')
     country = request.GET.get('country', '')
     category = request.GET.get('category', '')
@@ -25,30 +25,14 @@ def properties_list(request):
     guests = request.GET.get('numGuests', '')
     bathrooms = request.GET.get('numBathrooms', '')
 
-    try:
-        token = request.META['HTTP_AUTHORIZATION'].split("Bearer ")[1]
-        token = AccessToken(token)
-        user_id = token.payload['user_id']
-        user = User.objects.get(pk=user_id)
-    except:
-        user = None
-
     if (landlord_id):
         properties = properties.filter(landlord_id=landlord_id)
-
-    if (is_favorites):
-        properties = properties.filter(favorited__in=[user])
 
     if (guests):
         properties = properties.filter(guests__gte=guests)
 
-    print('\n\n****category:', category)
-    print('properties before:', properties)
-    print('bedrooms:', bedrooms)
-
     if (bedrooms):
         properties = properties.filter(bedrooms__gte=bedrooms)
-
 
     if (bathrooms):
         properties = properties.filter(bathrooms__gte=bathrooms)
@@ -56,12 +40,8 @@ def properties_list(request):
     if (country):
         properties = properties.filter(country=country)
 
-
     if (category and category != 'undefined'):
         properties = properties.filter(category=category)
-
-    print('properties after:', properties)
-
 
     if (checkin_date and checkout_date):
         exact_matches = Reservation.objects.filter(start_date=checkin_date) | Reservation.objects.filter(end_date=checkout_date)
@@ -73,15 +53,22 @@ def properties_list(request):
 
         properties = properties.exclude(id__in=all_matches)
 
-    if user:
-        for property in properties:
-            if user in property.favorited.all():
-                favorites.append(property.id)
+    try:
+        token = request.META['HTTP_AUTHORIZATION'].split("Bearer ")[1]
+        token = AccessToken(token)
+        user_id = token.payload['user_id']
+        user = User.objects.get(pk=user_id)
+    except:
+        user = None
 
-    serializer = PropertiesListSerializer(properties, many=True)
+    if user and get_favorites:
+        favorites = properties.filter(favorited__in=[user])
+
+    propertiesSerializer = PropertiesListSerializer(properties, many=True)
+    favoritesSerializer = PropertiesListSerializer(favorites, many=True)
     return JsonResponse({
-        'properties': serializer.data,
-        'favorites': favorites
+        'properties': propertiesSerializer.data,
+        'favorites': favoritesSerializer.data
     });
 
 
@@ -97,6 +84,7 @@ def properties_detail(request, pk):
 
 @api_view(['POST', 'FILES'])
 def create_property(request):
+    print('inside create_property')
     form = PropertyForm(request.POST, request.FILES)
 
     if (form.is_valid()):
@@ -161,6 +149,7 @@ def property_reservations(request, pk):
 
 @api_view(['POST'])
 def toggle_favorite(request, pk):
+    print('inside toggle_favorite')
     property= Property.objects.get(pk=pk)
     if (request.user in property.favorited.all()):
         property.favorited.remove(request.user)
