@@ -30,11 +30,6 @@ def properties_list(request):
         token = AccessToken(token)
         user_id = token.payload['user_id']
         user = User.objects.get(pk=user_id)
-
-        if user:
-            for property in properties:
-                if user in property.favorited.all():
-                    favorites.append(property.id)
     except:
         user = None
 
@@ -77,6 +72,11 @@ def properties_list(request):
             all_matches.append(reservation.property_id)
 
         properties = properties.exclude(id__in=all_matches)
+
+    if user:
+        for property in properties:
+            if user in property.favorited.all():
+                favorites.append(property.id)
 
     serializer = PropertiesListSerializer(properties, many=True)
     return JsonResponse({
