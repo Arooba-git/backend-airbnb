@@ -11,11 +11,9 @@ from useraccount.serializers import UserDetailsSerializer
 @authentication_classes([])
 @permission_classes([])
 def landlord_detail(request, pk):
-    landlord= User.objects.get(pk=pk)
-    print('~~~~landlord', landlord)
+    user = User.objects.get(pk=pk)
 
-    serializer = UserDetailsSerializer(landlord, many=False)
-    print('~~~serializer', serializer)
+    serializer = UserDetailsSerializer(user, many=False)
 
     return JsonResponse(serializer.data, safe=False)
 

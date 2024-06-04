@@ -26,6 +26,7 @@ def conversations_detail(request, pk):
 
 @api_view(['GET'])
 def conversations_start(request, user_id):
+    print('inside conversations_start')
     conversations = Conversation.objects.filter(users__in=[user_id]).filter(users__in=[request.user.id])
 
     if conversations.count() > 0:
@@ -37,8 +38,10 @@ def conversations_start(request, user_id):
     else:
         user = User.objects.get(pk=user_id)
         conversation = Conversation.objects.create()
+
         conversation.users.add(user)
-        conversation.users(request.user)
+        conversation.users.add(request.user)
+
         return JsonResponse({
             'success': True,
             'conversation_id': conversation.id

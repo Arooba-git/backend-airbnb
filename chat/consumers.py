@@ -22,16 +22,16 @@ class ChatConsumer(AsyncWebsocketConsumer):
             self.room_group_name, self.channel_name
         )
 
+        # Recieve message from web sockets
+
     async def receive(self, text_data):
         data = json.loads(text_data)
+        event = data.get('event')
+
         conversation_id = data['data']['conversation_id']
-        send_to_id = data['data']['send_to_id']
+        receiver_id = data['data']['receiver_id']
         name = data['data']['name']
         body = data['data']['body']
-
-
-        print('data[data]', data['data'])
-
 
         await self.channel_layer.group_send(self.room_group_name, {
             'type': 'chat_message',
@@ -39,9 +39,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'name': name
         })
 
-        await self.save_message(conversation_id, body, send_to_id)
+        await self.save_message(conversation_id, body, receiver_id)
 
     async def chat_message(self, event):
+        print('event', event)
         body = event['body']
         name = event['name']
 
@@ -51,9 +52,14 @@ class ChatConsumer(AsyncWebsocketConsumer):
         }))
 
     @sync_to_async
-    def save_message(self, conversation_id, body, send_to_id):
+    def save_message(self, conversation_id, body, receiver_id):
+        print('receiver_id', receiver_id)
         user = self.scope['user']
-        ConversationMessage.objects.create(conversation_id=conversation_id, body=body, sent_to_id=send_to_id, created_by=user)
+
+        ConversationMessage.objects.create(conversation_id=conversation_id,
+                                           body=body,
+                                           sent_to_id=receiver_id,
+                                           created_by=user)
 
 
 
