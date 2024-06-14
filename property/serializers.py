@@ -10,10 +10,10 @@ class PropertiesListSerializer(serializers.ModelSerializer):
         fields = ('id','title', 'price_per_night', 'image_url')
 
 
-class PropertiesListSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Property
-        fields = ('id','title', 'price_per_night', 'image_url')
+# class PropertiesListSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Property
+#         fields = ('id','title', 'price_per_night', 'image_url')
 
 
 class PropertiesDetailSerializer(serializers.ModelSerializer):

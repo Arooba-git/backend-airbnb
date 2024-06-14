@@ -14,6 +14,7 @@ from .serializers import PropertiesListSerializer, PropertiesDetailSerializer, R
 def properties_list(request):
     print('inside properties_list')
     properties = Property.objects.all()
+    favorites = []
 
     get_favorites = request.GET.get('favorites', '')
     landlord_id = request.GET.get('landlord_id', '')
@@ -65,11 +66,15 @@ def properties_list(request):
         favorites = properties.filter(favorited__in=[user])
 
     propertiesSerializer = PropertiesListSerializer(properties, many=True)
-    favoritesSerializer = PropertiesListSerializer(favorites, many=True)
-    return JsonResponse({
+    response_object = {
         'properties': propertiesSerializer.data,
-        'favorites': favoritesSerializer.data
-    });
+    }
+
+    if favorites:
+        favoritesSerializer = PropertiesListSerializer(favorites, many=True)
+        response_object['favorites'] = favoritesSerializer.data
+
+    return JsonResponse(response_object);
 
 
 @api_view(['GET'])
